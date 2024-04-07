@@ -5,19 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive 3D Business Card</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; font-family: Arial, sans-serif; text-align: center; }
-        #scene-container { width: 100%; height: 800px; margin: auto; }
+        #scene-container { width: 100%; height: 800px; margin: auto; position: relative}
         @media (max-width: 768px) {
             #scene-container {
-                height: 580px; /* Adjusted height for smaller screens */
+                height: 580px;
+                touch-action: none;/* Adjusted height for smaller screens */
             }
         }
         @media (max-width: 380px) {
             #scene-container {
-                height: 500px; /* Adjusted height for smaller screens */
+                height: 500px;
+                touch-action: none;/* Adjusted height for smaller screens */
             }
         }
+        .drag-subtitle {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 400;
+            font-size: 10px;
+            z-index: 100;
+            pointer-events: none;
+            animation: breathingAnimation 6s ease-in-out infinite;
+        }
+
+        @keyframes breathingAnimation {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0; }
+        }
+
         .info-card {
             max-width: 400px;
             margin: 20px auto;
@@ -33,7 +57,9 @@
 </head>
 <body>
 
-<div id="scene-container"></div>
+<div id="scene-container">
+    <div class="drag-subtitle">Drag me around</div>
+</div>
 
 <div class="info-card">
     <h3>Connect with me:</h3>
@@ -46,6 +72,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         let scene, camera, renderer, card, frontTexture, backTexture;
+        let isDragging = false;
+        let previousMouseX = 0, previousMouseY = 0;
+        let rotationSpeedX = 0, rotationSpeedY = 0;
 
         const sceneContainer = document.getElementById('scene-container');
 
@@ -88,6 +117,7 @@
             // Create a mesh with the geometry and materials
             card = new THREE.Mesh(geometry, materials);
             card.position.set(0, 0, 0);
+            card.rotation.set(-0.2, -0.2, 0.01);
             scene.add(card);
 
             // Add some lighting
@@ -102,6 +132,15 @@
 
             window.addEventListener('resize', onWindowResize, false);
 
+            // Mouse event listeners
+            renderer.domElement.addEventListener('mousedown', startDrag);
+            window.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', endDrag);
+
+            // Touch event listeners for mobile
+            renderer.domElement.addEventListener('touchstart', (e) => startDrag(e.touches[0]), {passive: false});
+            window.addEventListener('touchmove', (e) => drag(e.touches[0]), {passive: false});
+            window.addEventListener('touchend', endDrag, { passive: false });
         }
 
         function onWindowResize() {
@@ -110,10 +149,62 @@
             renderer.setSize(sceneContainer.offsetWidth, sceneContainer.offsetHeight);
         }
 
+        function startDrag(e) {
+            isDragging = true;
+            previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
+            // Prevent default action for touch start
+            if (e.type === 'touchstart') {
+                e.preventDefault();
+            }
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                const deltaX = e.clientX - previousMouseX;
+                const deltaY = e.clientY - previousMouseY;
+
+                rotationSpeedY = deltaX * 0.005;
+                rotationSpeedX = deltaY * 0.005;
+
+                card.rotation.y += rotationSpeedY;
+                card.rotation.x += rotationSpeedX;
+
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY;
+
+                // Prevent default action for touch move
+                if (e.type === 'mousemove' && e.cancelable) {
+                    e.preventDefault();
+                }
+            }
+        }
+
+        function endDrag() {
+            isDragging = false;
+        }
+
+
         function animate() {
             requestAnimationFrame(animate);
-            card.rotation.y += 0.001;
-            card.rotation.x += 0;// Remove or modify this line to control the rotation.
+
+            if (!isDragging) {
+                // Apply inertia
+                card.rotation.x += rotationSpeedX;
+                card.rotation.y += rotationSpeedY;
+
+                // Gradually reduce rotation speed to simulate inertia
+                rotationSpeedX *= 0.95;
+                rotationSpeedY *= 0.95;
+
+                // Return to default slow rotation once the inertia has almost stopped
+                if (Math.abs(rotationSpeedX) < 0.001 && Math.abs(rotationSpeedY) < 0.001) {
+                    card.rotation.y += 0.002; // Default slow rotation
+                    rotationSpeedX = 0; // Stop further rotation adjustments
+                    rotationSpeedY = 0;
+                }
+            }
+
             renderer.render(scene, camera);
         }
     });
