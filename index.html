@@ -1,10 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Cool Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive 3D Business Card</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; text-align: center; }
+        #scene-container { width: 70%; height: 700px; margin: auto; }
+        .info-card {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        .info-card h3 { margin: 0; }
+        .info-card p { margin: 10px 0; }
+        .info-card a { color: #0077cc; text-decoration: none; }
+        .info-card a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-<h1>Welcome to my website! ⭐️</h1>
-<p>How was your day Taline? 🎉 Eres preciosa</p>
+
+<div id="scene-container"></div>
+
+<div class="info-card">
+    <h3>Connect with me:</h3>
+    <p><a href="https://linkedin.com/in/yourprofile">LinkedIn</a></p>
+    <p><a href="https://twitter.com/yourprofile">Twitter</a></p>
+    <p><a href="https://github.com/yourprofile">GitHub</a></p>
+    <!-- More links as needed -->
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let scene, camera, renderer, card, frontTexture, backTexture;
+
+        const sceneContainer = document.getElementById('scene-container');
+
+        init();
+        animate();
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, sceneContainer.offsetWidth / sceneContainer.offsetHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setClearColor(0x000000, 0);
+            renderer.setSize(sceneContainer.offsetWidth, sceneContainer.offsetHeight);
+            sceneContainer.appendChild(renderer.domElement);
+
+            frontTexture = new THREE.TextureLoader().load('./asset/front.png');
+            backTexture = new THREE.TextureLoader().load('./asset/back.png');
+
+            // Adjust these dimensions as needed
+            const cardWidth = 2.5;
+            const cardHeight = 1.5;
+            const cardThickness = 0.1; // Add some thickness to your card
+
+            // Using BoxGeometry to create a geometry with some thickness
+            const geometry = new THREE.BoxGeometry(cardWidth, cardHeight, cardThickness);
+
+            // Since BoxGeometry creates a 3D box, we'll adjust the material application
+            const materials = [
+                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}), // side material (optional, can be set to the color of the edge or any preference)
+                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}), // top and bottom material
+                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}), // left and right material
+                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}),
+                new THREE.MeshBasicMaterial({ map: frontTexture }), // front side
+                new THREE.MeshBasicMaterial({ map: backTexture }),
+            ];
+
+            // Create a mesh with the geometry and materials
+            card = new THREE.Mesh(geometry, materials);
+            card.position.set(0, 0, 0);
+
+            scene.add(card);
+
+            camera.position.z = 5;
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = sceneContainer.offsetWidth / sceneContainer.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(sceneContainer.offsetWidth, sceneContainer.offsetHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            card.rotation.y += 0.005;
+            card.rotation.x += 0.0005;// Remove or modify this line to control the rotation.
+            renderer.render(scene, camera);
+        }
+    });
+</script>
+
 </body>
 </html>
