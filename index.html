@@ -44,40 +44,51 @@
 
         function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, sceneContainer.offsetWidth / sceneContainer.offsetHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ alpha: true });
-            renderer.setClearColor(0x000000, 0);
+            camera = new THREE.PerspectiveCamera(40, sceneContainer.offsetWidth / sceneContainer.offsetHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+            renderer.setClearColor(0x000000, 1);
             renderer.setSize(sceneContainer.offsetWidth, sceneContainer.offsetHeight);
             sceneContainer.appendChild(renderer.domElement);
 
             frontTexture = new THREE.TextureLoader().load('./asset/front.png');
             backTexture = new THREE.TextureLoader().load('./asset/back.png');
+            frontTexture.anisotropy = renderer.getMaxAnisotropy();
+            backTexture.anisotropy = renderer.getMaxAnisotropy();
+            frontTexture.minFilter = THREE.LinearFilter;
+            backTexture.minFilter = THREE.LinearFilter;
 
             // Adjust these dimensions as needed
-            const cardWidth = 2.5;
+            const cardWidth = 2.625;
             const cardHeight = 1.5;
-            const cardThickness = 0.1; // Add some thickness to your card
+            const cardThickness = 0.05; // Add some thickness to your card
 
             // Using BoxGeometry to create a geometry with some thickness
             const geometry = new THREE.BoxGeometry(cardWidth, cardHeight, cardThickness);
 
             // Since BoxGeometry creates a 3D box, we'll adjust the material application
             const materials = [
-                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}), // side material (optional, can be set to the color of the edge or any preference)
-                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}), // top and bottom material
-                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}), // left and right material
-                new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide}),
-                new THREE.MeshBasicMaterial({ map: frontTexture }), // front side
-                new THREE.MeshBasicMaterial({ map: backTexture }),
+                new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // side material (optional, can be set to the color of the edge or any preference)
+                new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // top and bottom material
+                new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // left and right material
+                new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}),
+                new THREE.MeshPhongMaterial({ map: frontTexture }), // front side
+                new THREE.MeshPhongMaterial({ map: backTexture }),
             ];
 
             // Create a mesh with the geometry and materials
             card = new THREE.Mesh(geometry, materials);
             card.position.set(0, 0, 0);
-
             scene.add(card);
 
-            camera.position.z = 5;
+            // Add some lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(0, 1, 1);
+            scene.add(directionalLight);
+
+            camera.position.z = 4;
 
             window.addEventListener('resize', onWindowResize, false);
         }
@@ -90,8 +101,8 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            card.rotation.y += 0.005;
-            card.rotation.x += 0.0005;// Remove or modify this line to control the rotation.
+            card.rotation.y += 0;
+            card.rotation.x += 0;// Remove or modify this line to control the rotation.
             renderer.render(scene, camera);
         }
     });
