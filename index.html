@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; font-family: "Monserrat", sans-serif; font-weight: 400; text-align: center; background: black }
@@ -46,14 +47,43 @@
         .info-card {
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             background-color: white;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            border-radius: 10px;
+            margin-left: 10%;
+            margin-right: 10%;
+            padding: 10px;
         }
 
-        .info-card h3 { margin: 0; }
+        .info-card h3 { margin: 0; font-family: "Montserrat", sans-serif;
+            font-weight: 500;
+            letter-spacing: 0;
+        font-size: 1rem}
         .info-card p { margin: 10px 0; }
         .info-card a { color: #0077cc; text-decoration: none; }
         .info-card a:hover { text-decoration: underline; }
+        .link-button {
+            display: inline-block;
+            padding: 8px 15px;
+            width: 200px;
+            margin: 5px;
+            background-color: #0077b5; /* LinkedIn blue */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .link-button i {
+            margin-right: 5px;
+        }
+
+        .linkedin {
+            background-color: #cae4f3; /* Darker LinkedIn blue */
+        }
+
+        .github {
+            background-color: #24292e;
+        }
+
     </style>
 </head>
 <body>
@@ -63,12 +93,13 @@
 </div>
 
 <div class="info-card">
-    <h3>Connect with me:</h3>
-    <p><a href="https://linkedin.com/in/davidfesteban">LinkedIn</a></p>
-    <p><a href="https://twitter.com/yourprofile">Twitter</a></p>
-    <p><a href="https://github.com/yourprofile">GitHub</a></p>
+    <h3>Leading trust towards success</h3>
+    <p><a class="link-button linkedin" href="https://linkedin.com/in/davidfesteban"><i class="fab fa-linkedin"></i> LinkedIn</a></p>
+    <p><a class="link-button github" href="https://github.com/yourprofile" style="color: white;"><i class="fab fa-github"></i> GitHub</a></p>
+    <p><a class="link-button contact" href="./asset/vCard.vcf" download style="background: navajowhite;color: black;"><i class="fas fa-address-book"></i> Contact</a></p>
     <!-- More links as needed -->
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
