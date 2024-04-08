@@ -10,7 +10,15 @@ export class SceneSetup {
     #init() {
         this.#initRenderer();
         this.#initLights();
-        this.camera.position.z = 4;
+        this.#initCameraPosition();
+    }
+
+    #initCameraPosition() {
+        if(this.container.offsetWidth < 500) {
+            this.camera.position.z = 6;
+        } else {
+            this.camera.position.z = 4;
+        }
     }
 
     #initRenderer() {
@@ -31,6 +39,7 @@ export class SceneSetup {
     }
 
     onWindowResize = () => {
+        this.#initCameraPosition();
         this.camera.aspect = this.container.offsetWidth / this.container.offsetHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);

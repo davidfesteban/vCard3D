@@ -1,6 +1,12 @@
-body {
+body, html {
+    width: 100vw;
+    height: 100vh;
     margin: 0;
-    font-family: "Monserrat", sans-serif;
+    overflow: hidden; /* Prevent scrolling */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Montserrat", sans-serif; /* Corrected spelling */
     font-weight: 400;
     text-align: center;
     background-color: black;
@@ -9,12 +15,6 @@ body {
     background-position: center; /* Center the background image */
     background-repeat: no-repeat;
     background-blend-mode: normal;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .info-card {
