@@ -3,7 +3,18 @@ body {
     font-family: "Monserrat", sans-serif;
     font-weight: 400;
     text-align: center;
-    background: black
+    background-color: black;
+    background-image: url("../asset/moon-1527501.jpg");
+    background-size: cover; /* Cover the entire page */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat;
+    background-blend-mode: normal;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .info-card {

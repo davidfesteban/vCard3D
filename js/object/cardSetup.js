@@ -5,11 +5,10 @@ import {SceneSetup} from "../sceneSetup.js";
 export class CardSetup extends ObjectSetup {
 
     constructor(renderer) {
-        super();
+        super(renderer);
         if (!(renderer instanceof THREE.WebGLRenderer)) {
             throw new TypeError("Expected scene to be an instance of WebGLRenderer");
         }
-        this.renderer = renderer;
         this.frontTexture = new THREE.TextureLoader().load('../../asset/card/front.png');
         this.backTexture = new THREE.TextureLoader().load('../../asset/card/back.png');
         this.cardWidth = 2.625;
