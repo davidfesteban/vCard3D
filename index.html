@@ -2,28 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Interactive 3D Business Card</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
     <style>
-        body { margin: 0; font-family: "Monserrat", sans-serif; font-weight: 400; text-align: center; background: black }
-        #scene-container { width: 100%; height: 800px; margin: auto; position: relative}
+        body {
+            margin: 0;
+            font-family: "Monserrat", sans-serif;
+            font-weight: 400;
+            text-align: center;
+            background: black
+        }
+
+        #scene-container {
+            width: 100%;
+            height: 800px;
+            margin: auto;
+            position: relative
+        }
+
         @media (max-width: 768px) {
             #scene-container {
                 height: 580px;
-                touch-action: none;/* Adjusted height for smaller screens */
+                touch-action: none; /* Adjusted height for smaller screens */
             }
         }
+
         @media (max-width: 380px) {
             #scene-container {
                 height: 500px;
-                touch-action: none;/* Adjusted height for smaller screens */
+                touch-action: none; /* Adjusted height for smaller screens */
             }
         }
+
         .drag-subtitle {
             position: absolute;
             bottom: 10px;
@@ -40,12 +56,16 @@
         }
 
         @keyframes breathingAnimation {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0; }
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0;
+            }
         }
 
         .info-card {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: white;
             border-radius: 10px;
             margin-left: 10%;
@@ -53,13 +73,27 @@
             padding: 10px;
         }
 
-        .info-card h3 { margin: 0; font-family: "Montserrat", sans-serif;
+        .info-card h3 {
+            margin: 0;
+            font-family: "Montserrat", sans-serif;
             font-weight: 500;
             letter-spacing: 0;
-        font-size: 1rem}
-        .info-card p { margin: 10px 0; }
-        .info-card a { color: #0077cc; text-decoration: none; }
-        .info-card a:hover { text-decoration: underline; }
+            font-size: 1rem
+        }
+
+        .info-card p {
+            margin: 10px 0;
+        }
+
+        .info-card a {
+            color: #0077cc;
+            text-decoration: none;
+        }
+
+        .info-card a:hover {
+            text-decoration: underline;
+        }
+
         .link-button {
             display: inline-block;
             padding: 8px 15px;
@@ -94,9 +128,12 @@
 
 <div class="info-card">
     <h3>Leading trust towards success</h3>
-    <p><a class="link-button linkedin" href="https://linkedin.com/in/davidfesteban"><i class="fab fa-linkedin"></i> LinkedIn</a></p>
-    <p><a class="link-button github" href="https://github.com/yourprofile" style="color: white;"><i class="fab fa-github"></i> GitHub</a></p>
-    <p><a class="link-button contact" href="./asset/vCard.vcf" download style="background: navajowhite;color: black;"><i class="fas fa-address-book"></i> Contact</a></p>
+    <p><a class="link-button linkedin" href="https://linkedin.com/in/davidfesteban"><i class="fab fa-linkedin"></i>
+        LinkedIn</a></p>
+    <p><a class="link-button github" href="https://github.com/davidfesteban" style="color: white;"><i
+            class="fab fa-github"></i> GitHub</a></p>
+    <p><a class="link-button contact" download href="./asset/vCard.vcf" style="background: navajowhite;color: black;"><i
+            class="fas fa-address-book"></i> Contact</a></p>
     <!-- More links as needed -->
 </div>
 
@@ -116,7 +153,7 @@
         function init() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60, sceneContainer.offsetWidth / sceneContainer.offsetHeight, 0.1, 1900);
-            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+            renderer = new THREE.WebGLRenderer({alpha: true, antialias: true, powerPreference: "high-performance"});
             renderer.setClearColor(0x000000, 0);
             renderer.setSize(sceneContainer.offsetWidth, sceneContainer.offsetHeight);
             sceneContainer.appendChild(renderer.domElement);
@@ -142,8 +179,8 @@
                 new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // top and bottom material
                 new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // left and right material
                 new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}),
-                new THREE.MeshPhongMaterial({ map: frontTexture }), // front side
-                new THREE.MeshPhongMaterial({ map: backTexture }),
+                new THREE.MeshPhongMaterial({map: frontTexture}), // front side
+                new THREE.MeshPhongMaterial({map: backTexture}),
             ];
 
             // Create a mesh with the geometry and materials
@@ -172,7 +209,7 @@
             // Touch event listeners for mobile
             renderer.domElement.addEventListener('touchstart', (e) => startDrag(e.touches[0]), {passive: false});
             window.addEventListener('touchmove', (e) => drag(e.touches[0]), {passive: false});
-            window.addEventListener('touchend', endDrag, { passive: false });
+            window.addEventListener('touchend', endDrag, {passive: false});
         }
 
         function onWindowResize() {
