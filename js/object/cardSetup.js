@@ -32,12 +32,12 @@ export class CardSetup extends ObjectSetup {
 
         // Since BoxGeometry creates a 3D box, we'll adjust the material application
         const materials = [
-            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // side material (optional, can be set to the color of the edge or any preference)
-            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // top and bottom material
-            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}), // left and right material
-            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}),
-            new THREE.MeshPhongMaterial({map: this.frontTexture}), // front side
-            new THREE.MeshPhongMaterial({map: this.backTexture}),
+            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide, transparent: true, opacity: 1}), // side material (optional, can be set to the color of the edge or any preference)
+            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide,transparent: true, opacity: 1}), // top and bottom material
+            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide,transparent: true, opacity: 1}), // left and right material
+            new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide,transparent: true, opacity: 1}),
+            new THREE.MeshPhongMaterial({map: this.frontTexture,transparent: true, opacity: 1}), // front side
+            new THREE.MeshPhongMaterial({map: this.backTexture,transparent: true, opacity: 1}),
         ];
 
         this.card = new THREE.Mesh(geometry, materials);

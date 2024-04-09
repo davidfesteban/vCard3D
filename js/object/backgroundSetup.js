@@ -25,9 +25,10 @@ export class BackgroundSetup extends ObjectSetup {
         const starGeometry = new THREE.BufferGeometry();
         const starMaterial = new THREE.PointsMaterial({
             color: 0xffffff,
-            size: 0.1,
+            size: 1.5,
             map: this.texture,
             transparent: true,
+            opacity: 0
         });
 
         // Create an array to hold positions of each star

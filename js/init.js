@@ -10,12 +10,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardAnimation = new CardAnimation();
     const backgroundSetup = new BackgroundSetup(sceneSetup.renderer);
     const starAnimation = new StarAnimation();
+    let stop = false;
 
     sceneSetup.scene.add(cardSetup.card);
     cardSetup.startAnimation(cardAnimation, sceneSetup);
 
     sceneSetup.scene.add(backgroundSetup.background);
-    backgroundSetup.startAnimation(starAnimation, sceneSetup);
+
+    //Animation transition
+    window.addEventListener("click", function () {
+        if(!stop) {
+            stop = true;
+            backgroundSetup.startAnimation(starAnimation, sceneSetup);
+
+            setTimeout(() => {
+                cardAnimation.deanimate();
+                document.body.style.backgroundSize = '250%';
+            }, 1000);
+
+            setTimeout(() => {
+                starAnimation.deanimate();
+            }, 4000);
+        }
+
+    });
 
     registerListeners(sceneSetup, cardAnimation);
 });
@@ -35,11 +53,10 @@ function registerListeners(sceneSetup, cardAnimation) {
     window.addEventListener('mousemove', (e) => cardAnimation.drag(e));
     window.addEventListener('mouseup', () => cardAnimation.endDrag());
 
-
     // Touch event listeners for mobile
     sceneSetup.renderer.domElement.addEventListener('touchstart', (e) => cardAnimation.startDrag(e.touches[0]), {passive: false});
     window.addEventListener('touchmove', (e) => cardAnimation.drag(e.touches[0]), {passive: false});
-    window.addEventListener('touchend', cardAnimation.endDrag, {passive: false});
+    window.addEventListener('touchend', () => cardAnimation.endDrag(), {passive: false});
 }
 
 //Special case for parallax background

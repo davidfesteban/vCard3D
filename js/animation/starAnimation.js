@@ -5,19 +5,27 @@ export class StarAnimation extends Animation {
     constructor() {
         super();
         this.stars = null;
+        this.stop = false;
+        this.multiplier = 1.00;
     }
 
     animate(objectSetup) {
         if (!(objectSetup instanceof BackgroundSetup)) {
-            throw new TypeError("Expected scene to be an instance of BackgroundSetup");
+            throw new TypeError("Expected objectSetup to be an instance of BackgroundSetup");
         }
         this.stars = objectSetup.background;
+        // Assuming a linear opacity increase as stars move towards the camera
+        const maxOpacityZ = -500; // Z position where stars are fully opaque
+        const minOpacityZ = -2000; // Z position where stars start becoming visible
 
-        // Move each star towards the camera and reset if too close
         const positions = this.stars.geometry.attributes.position.array;
         for (let i = 0; i < positions.length; i += 3) {
-            positions[i + 2] += 2; // Move stars along the z-axis towards the camera
 
+            positions[i + 2] += (3*this.multiplier);
+
+
+
+            // Reset star position if too close and set opacity based on z-position
             if (positions[i + 2] > 1) {
                 positions[i] = THREE.MathUtils.randFloatSpread(2000);
                 positions[i + 1] = THREE.MathUtils.randFloatSpread(2000);
@@ -26,5 +34,23 @@ export class StarAnimation extends Animation {
         }
 
         this.stars.geometry.attributes.position.needsUpdate = true;
+
+        // Adjust overall material opacity based on the average z-position of all stars (simplified approach)
+        //const averageZ = positions.reduce((acc, _, index) => index % 3 === 2 ? acc + positions[index] : acc, 0) / (positions.length / 3);
+        //const normalizedZ = (averageZ - minOpacityZ) / (maxOpacityZ - minOpacityZ);
+
+
+        if(!this.stop) {
+            this.stars.material.opacity += 0.01
+        } else {
+            this.stars.material.opacity -= 0.01;
+            this.multiplier -= 0.001;
+        }
+
     }
+
+    deanimate() {
+        this.stop = true;
+    }
+
 }

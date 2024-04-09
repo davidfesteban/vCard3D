@@ -11,10 +11,11 @@ body, html {
     text-align: center;
     background-color: black;
     background-image: url("../asset/moon-1527501.jpg");
-    background-size: cover; /* Cover the entire page */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat;
     background-blend-mode: normal;
+    background-size: 1%;
+    transition: background-size 8s ease;
 }
 
 .info-card {
