@@ -14,16 +14,11 @@ export class StarAnimation extends Animation {
             throw new TypeError("Expected objectSetup to be an instance of BackgroundSetup");
         }
         this.stars = objectSetup.background;
-        // Assuming a linear opacity increase as stars move towards the camera
-        const maxOpacityZ = -500; // Z position where stars are fully opaque
-        const minOpacityZ = -2000; // Z position where stars start becoming visible
 
         const positions = this.stars.geometry.attributes.position.array;
         for (let i = 0; i < positions.length; i += 3) {
 
-            positions[i + 2] += (3*this.multiplier);
-
-
+            positions[i + 2] += (4*this.multiplier);
 
             // Reset star position if too close and set opacity based on z-position
             if (positions[i + 2] > 1) {

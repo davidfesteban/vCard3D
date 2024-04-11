@@ -46,11 +46,8 @@ export class CardAnimation extends Animation {
         }
         this.card = objectSetup.card;
 
-
-
-
         if(this.stop) {
-            const targetRotation = Math.PI / 2;
+            let targetRotation = Math.PI / 2;
             let rotationStep = 0.02; // The amount you adjust the rotation per frame
 
             // Normalize current rotation to [0, 2*Math.PI]
@@ -62,23 +59,30 @@ export class CardAnimation extends Animation {
             if (diff > Math.PI) diff -= 2 * Math.PI;
             else if (diff < -Math.PI) diff += 2 * Math.PI;
 
-            // Calculate steps needed to reach the target rotation
-            const stepsToTarget = (Math.abs(diff) / rotationStep) + 5;
+            // Apply rotation in the correct direction
+            this.card.rotation.y += (diff > 0 ? rotationStep : -rotationStep);
+
+            // Calculate steps needed to reach the target rotation assuming a fixed step
+            const stepsToTarget = Math.abs(diff) / rotationStep;
 
             // Calculate opacity decrement so that opacity reaches 0 at the last step
-            const opacityDecrement = (this.card.material[0].opacity) / stepsToTarget; // Assuming all materials have the same initial opacity
+            const opacityDecrement = this.card.material[0].opacity / stepsToTarget; // Assuming all materials have the same initial opacity
 
-            // Adjust rotation
-            this.card.rotation.y += diff > 0 ? rotationStep : 0;
+            // Decrease opacity
+            this.card.material.forEach(material => {
+                material.opacity = Math.max(0, material.opacity - opacityDecrement); // Ensure opacity doesn't go below 0
+                if(material.opacity === 0) {
+                    // If you need to perform some cleanup after opacity reaches 0, do it here
+                    // Note: The 'delete' method might not be what you want unless you defined it for your specific use case
+                }
+            });
 
-            if(targetRotation < currentRotationY) {
-                this.card.material.forEach(material => {
-                    material.opacity = Math.max(0, material.opacity - opacityDecrement); // Ensure opacity doesn't go below 0
-                });
+            // Check if rotation has reached or passed the target and correct it if necessary
+            let newRotationY = this.card.rotation.y % (2 * Math.PI);
+            if (newRotationY < 0) newRotationY += 2 * Math.PI;
+            if ((diff > 0 && newRotationY >= targetRotation) || (diff < 0 && newRotationY <= targetRotation)) {
+                this.card.rotation.y = targetRotation;
             }
-
-            // Adjust opacity for each material
-
 
 
         } else {

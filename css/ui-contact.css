@@ -1,0 +1,36 @@
+.drag-contact {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.inverse-btn {
+    background-color: transparent;
+    color: #fff;
+    margin: 10px; /* Espacio entre botones */
+    width: 15rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, white 7%, transparent 20%, transparent 80%, white 93%) 1 0 0 0 / 2px / 0 stretch;
+    border-image-slice: 1;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 0.3rem;
+}
+
+.inverse-btn:hover {
+    background-color: #fff; /* Color de fondo al pasar el ratón */
+    color: #000; /* Color de texto al pasar el ratón */
+    animation: breathingAnimation 2s ease-in-out infinite;
+}

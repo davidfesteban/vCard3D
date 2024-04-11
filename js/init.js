@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardAnimation = new CardAnimation();
     const backgroundSetup = new BackgroundSetup(sceneSetup.renderer);
     const starAnimation = new StarAnimation();
+    const dragTitle = document.querySelector('.drag-title');
+    const dragContact = document.querySelector('.drag-contact');
+    const dragSubtitle = document.querySelector('.drag-subtitle');
     let stop = false;
 
     sceneSetup.scene.add(cardSetup.card);
@@ -17,20 +20,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     sceneSetup.scene.add(backgroundSetup.background);
 
-    //Animation transition
-    window.addEventListener("click", function () {
-        if(!stop) {
+    //Animation transition starts
+    window.addEventListener("click", async function () {
+        if (!stop) {
             stop = true;
+            //TODO: REFACTOR TO COMPLETED LISTENER
+            cardAnimation.deanimate();
+            toggleDragVisibility(dragSubtitle);
             backgroundSetup.startAnimation(starAnimation, sceneSetup);
 
-            setTimeout(() => {
-                cardAnimation.deanimate();
-                document.body.style.backgroundSize = '250%';
-            }, 1000);
+            await toggleDragInAndOutAnimation(dragTitle);
+            dragTitle.innerText = "Our Journey";
+            await toggleDragInAndOutAnimation(dragTitle);
+            dragTitle.innerText = "Together";
+            await toggleDragInAndOutAnimation(dragTitle);
+            dragTitle.innerText = "Starts!";
+            starAnimation.deanimate();
+            await toggleDragInAndOutAnimation(dragTitle);
 
-            setTimeout(() => {
-                starAnimation.deanimate();
-            }, 4000);
+
+            if(window.innerWidth > 750) {
+                document.body.style.backgroundSize = '150%';
+            } else {
+                document.body.style.backgroundSize = '250%';
+            }
+            await delay(4500);
+            toggleDragVisibility(dragContact);
+            dragSubtitle.innerText = "LEADING TRUST TOWARDS SUCCESS"
+            toggleDragVisibility(dragSubtitle);
         }
 
     });
@@ -57,10 +74,51 @@ function registerListeners(sceneSetup, cardAnimation) {
     sceneSetup.renderer.domElement.addEventListener('touchstart', (e) => cardAnimation.startDrag(e.touches[0]), {passive: false});
     window.addEventListener('touchmove', (e) => cardAnimation.drag(e.touches[0]), {passive: false});
     window.addEventListener('touchend', () => cardAnimation.endDrag(), {passive: false});
+
+    //UI Transition (TODO: REFACTOR THIS FILE URGENTLY)
+    const contactButton = document.getElementById('contact-button');
+    const linkedinButton = document.getElementById('linkedin-button');
+    const githubButton = document.getElementById('github-button');
+    const dragTitle = document.querySelector('.drag-contact');
+
+    contactButton.addEventListener('click', function() {
+        window.location.href = './asset/vCard.vcf';
+        //toggleDragVisibility(dragTitle);
+    });
+    linkedinButton.addEventListener('click', function() {
+        window.open('https://linkedin.com/in/davidfesteban', '_blank');
+        //toggleDragVisibility(dragTitle);
+    });
+    githubButton.addEventListener('click', function() {
+        window.open('https://github.com/davidfesteban', '_blank');
+        //toggleDragVisibility(dragTitle);
+    });
+}
+
+async function toggleDragInAndOutAnimation(element) {
+    toggleDragVisibility(element);
+    await delay(1500);
+    toggleDragVisibility(element);
+    await delay(1500);
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+function toggleDragVisibility(element) {
+    if(element.classList.contains('hide')) {
+        element.classList.add('show');
+        element.classList.toggle('hide');
+    } else if (element.classList.contains('show')) {
+        element.classList.add('hide');
+        element.classList.toggle('show');
+    }
 }
 
 //Special case for parallax background
-document.addEventListener('mousemove', (e) => {
+document.addEventListener('pointermove', (e) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
