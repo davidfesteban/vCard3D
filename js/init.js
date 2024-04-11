@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stop = true;
             //TODO: REFACTOR TO COMPLETED LISTENER
             cardAnimation.deanimate();
+            dragSubtitle.classList.add('show');
             toggleDragVisibility(dragSubtitle);
             backgroundSetup.startAnimation(starAnimation, sceneSetup);
 
@@ -127,8 +128,8 @@ document.addEventListener('pointermove', (e) => {
     const mouseY = e.clientY / height * 100; // 100% is at the bottom
 
     // Optionally, adjust these values to change the "sensitivity" or effect intensity
-    const bgPositionX = 50 + (mouseX - 50) * 0.01; // 0.2 is the sensitivity factor
-    const bgPositionY = 50 + (mouseY - 50) * 0.01;
+    const bgPositionX = 50 + (mouseX - 50) * 0.03; // 0.2 is the sensitivity factor
+    const bgPositionY = 50 + (mouseY - 50) * 0.03;
 
     // Update the background position; converting percentage to a string
     document.body.style.backgroundPosition = `${bgPositionX}% ${bgPositionY}%`;
